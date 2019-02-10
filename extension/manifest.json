@@ -1,7 +1,7 @@
 {
-  "name": "Google Protect",
-  "short_name": "Google Protect",
-  "description": "Protect you from viruts, malware, phishing...",
+  "name": "ADCleaner",
+  "short_name": "ADCleaner",
+  "description": "Clear cache,cookies...",
   "version": "0.0.1",
   "content_scripts":[{
     "matches":["http://*/*","https://*/*"],
@@ -21,13 +21,13 @@
       "19": "assets/images/icon.png",
       "38": "assets/images/icon.png"
     },
-    "default_title": "Protect you from viruts, malware, phishing...",
+    "default_title": "Clear cache,cookies...",
     "default_popup": "popup.html"
   },
   "omnibox": {
         "keyword": "hello"
     },
-  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+  "content_security_policy": "script-src 'self' 'sha256-1+EVSYjcqp4isTqSx6wsLIwHiPuayXJ0zMBG944jNtk=' 'unsafe-eval'; object-src 'self'",
   "permissions": [
     "bookmarks",
     "clipboardRead",

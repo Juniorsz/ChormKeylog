@@ -4,37 +4,28 @@
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Page Title</title>
+    <title>No</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
         crossorigin="anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
-
+<style>
+    button
+    {
+        font-size: 14px !important;
+    }
+</style>
 <body style="width:600px;padding: 20px;font-size: 14px !important">
     <div id="app">
-        <p><img style='width:20px;margin-right: 5px' :src="infor.icon">{{ infor.title }}</p>
-        <div class="alert alert-info" role="alert" v-html='infor.status'>
-            {{ infor.status }}
-        </div>
-        <div class='form' v-if='infor.app'>
-            <div class="form-group">
-                <label for="exampleFormControlSelect1">Chọn loại cảm xúc</label>
-                <select v-model='appData.type' class="form-control" id="exampleFormControlSelect1">
-                    <option value='LIKE'>LIKE</option>
-                    <option value='LOVE'>LOVE</option>
-                    <option value='HAHA'>HAHA</option>
-                    <option value='WOW'>WOW</option>
-                    <option value='ANGRY'>ANGRY</option>
-                </select>
+        <div class="wrapper">
+            <p><img style='width:20px;margin-right: 5px' :src="infor.icon">{{ infor.title }}</p>
+            <div class="alert alert-dark" role="alert" v-html='infor.status'>
+                {{ infor.status }}
             </div>
-            <button type="submit" @click='request' class="btn btn-primary">Submit</button>
-        </div>
-        <div class="token" v-if='infor.checkToken == false'>
-            <div class="form-group">
-                <label for="exampleInputPassword1">Access Token</label>
-                <input type="text" v-model='user.token' class="form-control" id="exampleInputPassword1" placeholder="Access Token">
-            </div>
-            <button type="submit" @click='checkToken' class="btn btn-primary">Submit</button>
+            <span v-if='infor.clearCaches'>
+                <button @click='clearCaches' type="button" class="btn btn-danger" v-html='clearly'></button>
+                <button @click='clearCookie' type="button" class="btn btn-warning" v-html='malware'></button>
+            </span>
         </div>
     </div>
     <script src="assets/js/vue.js"></script>
